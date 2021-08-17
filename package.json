@@ -1,7 +1,7 @@
 {
-  "name": "shuffle-spotify",
-  "version": "0.1.0",
-  "homepage": "http://DanTheManGude.github.io/shuffle-spotify",
+  "name": "gude-tunes",
+  "version": "0.2.0",
+  "homepage": "http://DanTheManGude.github.io/Gude-Tunes",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",

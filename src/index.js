@@ -6,8 +6,8 @@ import "./index.css";
 
 ReactDOM.render(
   <React.StrictMode>
-    <h1 id="title">Shuffle Spotify</h1>
-    <h3 id="subtitle">Activates shuffle for what you are listening to on Spotify</h3>
+    <h1 id="title">Gude Tunes</h1>
+    <h3 id="subtitle">Utilities to enhance your Spotify experience</h3>
     <App />
   </React.StrictMode>,
   document.getElementById("root")

@@ -1,3 +1,7 @@
-# shuffle-spotify
+# Gude Tunes
 
-Activates shuffle for what you are listening to on Spotify
+Web App for utilities that enhance your Spotify experience
+
+## Current Utilities
+
+- Shuffle: activates shuffle for current playback
