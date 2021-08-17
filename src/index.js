@@ -7,7 +7,7 @@ import "./index.css";
 ReactDOM.render(
   <React.StrictMode>
     <h1 id="title">Gude Tunes</h1>
-    <h3 id="subtitle">Utilities to enhance your Spotify experience</h3>
+    <h3 id="subtitle">Utilities to enhance your Spotify‎ experience</h3>
     <App />
   </React.StrictMode>,
   document.getElementById("root")

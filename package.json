@@ -1,7 +1,7 @@
 {
   "name": "gude-tunes",
   "version": "0.2.0",
-  "homepage": "http://DanTheManGude.github.io/Gude-Tunes",
+  "homepage": "http://DanTheManGude.github.io/gude-tunes",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",

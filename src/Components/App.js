@@ -1,8 +1,11 @@
 import React from "react";
 import Main from "./Main";
+import { scopesList } from "../Constants";
 
 const requestAuth = () => {
-  window.location.href = `https://accounts.spotify.com/authorize?client_id=ffe90abde69148bbbd6e4a1e372c0097&redirect_uri=https:%2F%2Fdangude.com%2Fshuffle-spotify&scope=user-read-private%20user-read-email%20user-modify-playback-state&response_type=token&state=20210212`;
+  const redirectUri = encodeURIComponent(window.location.href);
+  const scopes = scopesList.join("%20");
+  window.location.href = `https://accounts.spotify.com/authorize?client_id=125aeb2f61c242c68fe33802c481bb08&redirect_uri=${redirectUri}&scope=${scopes}&response_type=token&state=202102121300`;
 };
 
 const calculateAuthorization = () => {
@@ -36,7 +39,11 @@ function App() {
   const authorization = calculateAuthorization();
 
   if (authorization === -1) {
-    return <p className="regText errorText">Sorry, it looks like an error occurred</p>;
+    return (
+      <p className="regText errorText">
+        Sorry, it looks like an error occurred
+      </p>
+    );
   }
 
   if (authorization === 0) {
