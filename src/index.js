@@ -8,6 +8,9 @@ ReactDOM.render(
   <React.StrictMode>
     <h1 id="title">Gude Tunes</h1>
     <h3 id="subtitle">Utilities to enhance your Spotify‎ experience</h3>
+    <h5 id="help-text">
+      Be sure to have Spotify recently paused or playing for most utilities.
+    </h5>
     <App />
   </React.StrictMode>,
   document.getElementById("root")

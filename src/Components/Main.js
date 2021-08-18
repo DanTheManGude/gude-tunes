@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import * as PropTypes from "prop-types";
+import { messageActions, messageTypes } from "../Constants";
 
 function Main(props) {
   const {
     hashItems: { access_token },
+    updateMessageList,
   } = props;
-
-  const [responseCode, setResponseCode] = useState(null);
 
   return (
     <div>
@@ -22,18 +22,24 @@ function Main(props) {
             },
             body: "",
           })
-            .then((response) => setResponseCode(response.status))
-            .catch(console.error);
+            .then((response) => {
+              updateMessageList(messageActions.CREATE, {
+                type: messageTypes.SUCCESS,
+                source: "Shuffle",
+                text: "Your playback has been shuffled.",
+              });
+            })
+            .catch((error) => {
+              updateMessageList(messageActions.CREATE, {
+                type: messageTypes.ERROR,
+                source: "Shuffle",
+                text: "It doesn't seem like that worked.",
+              });
+            });
         }}
       >
         Activate Shuffle
       </button>
-      {responseCode &&
-        (responseCode === 204 ? (
-          <p className="regText successText">Yay, your playback has been shuffled :)</p>
-        ) : (
-          <p className="regText errorText">It looks like there was an error :(</p>
-        ))}
     </div>
   );
 }

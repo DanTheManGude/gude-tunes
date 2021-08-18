@@ -5,9 +5,10 @@ html {
 }
 
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  margin: 0 15px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -17,9 +18,66 @@ body {
   color: #2fdf65;
 }
 
+#subtitle {
+  color: #eee;
+}
+
+#help-text {
+  color: #aaa;
+}
+
 .regText {
   color: #eee;
   font-size: 18px;
+}
+
+.adminText {
+  color: #526fff;
+}
+
+.errorText {
+  color: #dc3545;
+}
+
+.successText {
+  color: #1db954;
+}
+
+.message {
+  padding: 20px;
+  color: white;
+  width: 80%;
+  margin: 20px auto;
+  border-radius: 20px;
+  font-size: 16px;
+}
+
+.msg-SUCCESS {
+  background-color: #22bb33;
+}
+.msg-ERROR {
+  background-color: #bb2124;
+}
+.msg-INFO {
+  background-color: #5bc0de;
+}
+.msg-WARNING {
+  background-color: #f0ad4e;
+}
+
+.close-message {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.close-message:hover {
+  color: black;
 }
 
 .authButton {
@@ -47,23 +105,6 @@ body {
 .authButton:active {
   background-color: #1aa34a;
   border-color: rgb(8, 53, 24);
-}
-
-#subtitle {
-  color: #eee;
-  padding-bottom: 40px;
-}
-
-.adminText {
-  color: #526fff;
-}
-
-.errorText {
-  color: #dc3545;
-}
-
-.successText {
-  color: #1db954;
 }
 
 .shuffleButton {

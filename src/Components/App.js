@@ -1,63 +1,84 @@
-import React from "react";
+import React, { useState } from "react";
 import Main from "./Main";
-import { scopesList } from "../Constants";
-
-const requestAuth = () => {
-  const redirectUri = encodeURIComponent(window.location.href);
-  const scopes = scopesList.join("%20");
-  window.location.href = `https://accounts.spotify.com/authorize?client_id=125aeb2f61c242c68fe33802c481bb08&redirect_uri=${redirectUri}&scope=${scopes}&response_type=token&state=202102121300`;
-};
-
-const calculateAuthorization = () => {
-  console.log(window.location);
-
-  const urlSearchParams = new URLSearchParams(window.location.search);
-  const params = Object.fromEntries(urlSearchParams.entries());
-  if (params.hasOwnProperty("error")) {
-    return -1;
-  }
-
-  if (!window.location.hash) {
-    return 0;
-  }
-
-  const hashItems = window.location.hash
-    .substr(1)
-    .split("&")
-    .reduce((acc, element) => {
-      const parts = element.split("=");
-      acc[parts[0]] = parts[1];
-      return acc;
-    }, {});
-
-  if (hashItems.hasOwnProperty("access_token")) {
-    return hashItems;
-  }
-};
+import LoginButton from "./LoginButton";
+import { calculateAuthentication } from "../Utils";
+import { messageActions, messageTypes } from "../Constants";
 
 function App() {
-  const authorization = calculateAuthorization();
+  const { code, message, payload } = calculateAuthentication();
 
-  if (authorization === -1) {
-    return (
-      <p className="regText errorText">
-        Sorry, it looks like an error occurred
-      </p>
-    );
-  }
+  const startingMessage =
+    code === -1
+      ? {
+          type: messageTypes.ERROR,
+          text: message,
+        }
+      : code === 1
+      ? {
+          type: messageTypes.SUCCESS,
+          text: "Login succesfull",
+        }
+      : {
+          type: messageTypes.INFO,
+          text: "Welcome!",
+        };
 
-  if (authorization === 0) {
-    return (
-      <div>
-        <p className="regText">Please login below to use the app</p>
-        <button className="regText authButton" onClick={requestAuth}>
-          Login
-        </button>
-      </div>
-    );
-  }
+  const [messageList, setMessageList] = useState([
+    { ...startingMessage, id: 0 },
+  ]);
+  const [messageId, setMessageId] = useState(1);
 
-  return <Main hashItems={authorization} />;
+  const getNewId = () => {
+    setMessageId((currentState) => currentState + 1);
+    return messageId;
+  };
+
+  const updateMessageList = (action, value) => {
+    switch (action) {
+      case messageActions.CREATE:
+        const newId = getNewId();
+        setMessageList((currentState) => [
+          ...currentState,
+          { ...value, id: newId },
+        ]);
+        console.log(newId);
+        return newId;
+      case messageActions.DELETE:
+        setMessageList((currentState) =>
+          currentState.filter((element) => element.id !== value)
+        );
+        return 0;
+      default:
+        return -1;
+    }
+  };
+
+  console.log(messageList);
+  return (
+    <div>
+      {messageList.map((message) => {
+        const { type, text, source = "", id } = message;
+        return (
+          <div id={`msg-${id}`} className={`message msg-${type}`}>
+            <span
+              className="close-message"
+              onClick={() => updateMessageList(messageActions.DELETE, id)}
+            >
+              &times;
+            </span>
+            {source && <strong>{source}: </strong>}
+            {text}
+          </div>
+        );
+      })}
+
+      {code === 1 ? (
+        <Main hashItems={payload} updateMessageList={updateMessageList} />
+      ) : (
+        <LoginButton />
+      )}
+    </div>
+  );
 }
 
 export default App;
