@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Main from "./Main";
+import ButtonList from "./ButtonList";
 import LoginButton from "./LoginButton";
 import { calculateAuthentication } from "../Utils";
 import { messageActions, messageTypes } from "../Constants";
@@ -16,11 +16,12 @@ function App() {
       : code === 1
       ? {
           type: messageTypes.SUCCESS,
-          text: "Login succesfull",
+          text: "Login succesfull!",
         }
       : {
           type: messageTypes.INFO,
-          text: "Welcome!",
+          source: "Welcome",
+          text: "Please login below to use the app.",
         };
 
   const [messageList, setMessageList] = useState([
@@ -41,7 +42,6 @@ function App() {
           ...currentState,
           { ...value, id: newId },
         ]);
-        console.log(newId);
         return newId;
       case messageActions.DELETE:
         setMessageList((currentState) =>
@@ -53,13 +53,12 @@ function App() {
     }
   };
 
-  console.log(messageList);
   return (
     <div>
       {messageList.map((message) => {
         const { type, text, source = "", id } = message;
         return (
-          <div id={`msg-${id}`} className={`message msg-${type}`}>
+          <div key={`msg-${id}`} className={`message msg-${type}`}>
             <span
               className="close-message"
               onClick={() => updateMessageList(messageActions.DELETE, id)}
@@ -73,7 +72,7 @@ function App() {
       })}
 
       {code === 1 ? (
-        <Main hashItems={payload} updateMessageList={updateMessageList} />
+        <ButtonList hashItems={payload} updateMessageList={updateMessageList} />
       ) : (
         <LoginButton />
       )}

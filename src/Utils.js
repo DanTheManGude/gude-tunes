@@ -38,3 +38,14 @@ export const requestAuth = () => {
   const scopes = scopesList.join("%20");
   window.location.href = `https://accounts.spotify.com/authorize?client_id=125aeb2f61c242c68fe33802c481bb08&redirect_uri=${redirectUri}&scope=${scopes}&response_type=token&state=202102121300`;
 };
+
+export const request = (path, method = "GET", access_token, fields = {}) =>
+  fetch(`https://api.spotify.com/v1/${path}`, {
+    method,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${access_token}`,
+    },
+    ...fields,
+  });

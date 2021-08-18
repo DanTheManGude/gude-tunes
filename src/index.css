@@ -26,27 +26,14 @@ body {
   color: #aaa;
 }
 
-.regText {
-  color: #eee;
-  font-size: 18px;
-}
-
 .adminText {
   color: #526fff;
-}
-
-.errorText {
-  color: #dc3545;
-}
-
-.successText {
-  color: #1db954;
 }
 
 .message {
   padding: 20px;
   color: white;
-  width: 80%;
+  width: 275px;
   margin: 20px auto;
   border-radius: 20px;
   font-size: 16px;
@@ -107,7 +94,7 @@ body {
   border-color: rgb(8, 53, 24);
 }
 
-.shuffleButton {
+.utility-btn {
   background-color: transparent;
   border-color: transparent;
   border-radius: 500px;
@@ -126,12 +113,12 @@ body {
   width: 300px;
 }
 
-.shuffleButton:hover {
+.utility-btn:hover {
   background-color: rgba(255, 255, 255, 0.89);
   color: black;
 }
 
-.shuffleButton:active {
+.utility-btn:active {
   background-color: rgba(255, 255, 255, 0.623);
   color: black;
 }
