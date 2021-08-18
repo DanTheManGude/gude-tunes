@@ -4,7 +4,7 @@ import { request } from "../../Utils";
 import { messageActions, messageTypes } from "../../Constants";
 
 function ShuffleButton(props) {
-  const { access_token, updateMessageList, name } = props;
+  const { access_token, updateMessageList, name, text } = props;
 
   return (
     <div>
@@ -35,7 +35,7 @@ function ShuffleButton(props) {
             });
         }}
       >
-        Activate Shuffle
+        {text}
       </button>
     </div>
   );

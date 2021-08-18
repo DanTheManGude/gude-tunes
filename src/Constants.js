@@ -11,3 +11,5 @@ export const messageTypes = {
   INFO: "INFO",
   WARNING: "WARNING",
 };
+
+export const candlesTime = { start: 13930, end: 21200 };
