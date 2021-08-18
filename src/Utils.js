@@ -6,7 +6,7 @@ import {
 } from "./Constants";
 
 export const calculateAuthentication = () => {
-  const authentication = { code: null, payload: null, message: "" };
+  const authentication = { code: null, hashItems: {}, message: "" };
 
   const urlSearchParams = new URLSearchParams(window.location.search);
   const params = Object.fromEntries(urlSearchParams.entries());
@@ -28,7 +28,7 @@ export const calculateAuthentication = () => {
       }, {});
     if (hashItems.hasOwnProperty("access_token")) {
       authentication.code = 1;
-      authentication.payload = hashItems;
+      authentication.hashItems = hashItems;
     } else {
       authentication.code = -1;
       authentication.message = "Hash does not include access_token";

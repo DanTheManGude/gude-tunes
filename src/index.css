@@ -32,11 +32,13 @@ body {
 
 .message {
   padding: 10px;
+  padding-right: 38px;
   color: white;
   width: 275px;
   margin: 20px auto;
-  border-radius: 20px;
+  border-radius: 15px;
   font-size: 16px;
+  position: relative;
 }
 
 .msg-SUCCESS {
@@ -53,14 +55,16 @@ body {
 }
 
 .close-message {
-  margin-left: 15px;
   color: white;
   font-weight: bold;
   float: right;
   font-size: 22px;
-  line-height: 20px;
   cursor: pointer;
   transition: 0.3s;
+  position: absolute;
+  top: 50%;
+  right: 5%;
+  transform: translateY(-50%);
 }
 
 .close-message:hover {
@@ -105,12 +109,13 @@ body {
   cursor: pointer;
   font-family: Circular, Helvetica, Arial, sans-serif;
   font-weight: bold;
-  font-size: 30px;
+  font-size: 25px;
   height: 65px;
   transition-duration: 0.3s, 0.3s, 0.3s, 0.3s, 0.3s;
   transition-property: background-color, border-color, color;
   vertical-align: middle;
   width: 300px;
+  margin: 15px;
 }
 
 .utility-btn:hover {

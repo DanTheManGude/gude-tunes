@@ -1,10 +1,22 @@
 import React, { useState } from "react";
-import ButtonList from "./ButtonList";
-import { requestAuth, calculateAuthentication } from "../Utils";
-import { messageActions, messageTypes } from "../Constants";
+import {
+  requestAuth,
+  calculateAuthentication,
+  getButtonOnClick,
+} from "./Utils";
+import {
+  messageActions,
+  messageTypes,
+  buttonIds,
+  buttonProperties,
+} from "./Constants";
 
 function App() {
-  const { code, message, payload } = calculateAuthentication();
+  const {
+    code,
+    message,
+    hashItems: { access_token },
+  } = calculateAuthentication();
 
   const startingMessage =
     code === -1
@@ -71,7 +83,23 @@ function App() {
       })}
 
       {code === 1 ? (
-        <ButtonList hashItems={payload} updateMessageList={updateMessageList} />
+        buttonIds.map((buttonId) => {
+          const { text, classNames = "", name } = buttonProperties[buttonId];
+          return (
+            <button
+              key={buttonId}
+              className={`utility-btn ${classNames}`}
+              onClick={getButtonOnClick(
+                buttonId,
+                access_token,
+                updateMessageList,
+                name
+              )}
+            >
+              {text}
+            </button>
+          );
+        })
       ) : (
         <button className="loginButton" onClick={requestAuth}>
           Login
