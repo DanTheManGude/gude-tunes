@@ -1,9 +1,4 @@
-import {
-  scopesList,
-  messageActions,
-  messageTypes,
-  candlesTime,
-} from "./Constants";
+import { scopesList, messageTypes, candlesTime } from "./Constants";
 
 export const calculateAuthentication = () => {
   const authentication = { code: null, hashItems: {}, message: "" };
@@ -56,14 +51,14 @@ export const request = (path, method = "GET", access_token, fields = {}) =>
   });
 
 const buttonFunctions = {
-  SHUFFLE: (access_token, updateMessageList, name) =>
+  SHUFFLE: (access_token, addNewMessage, name) =>
     request("me/player/shuffle?state=true", "PUT", access_token, {
       body: "",
     })
       .then((response) => {
         const { status } = response;
         if (status === 204) {
-          updateMessageList(messageActions.CREATE, {
+          addNewMessage({
             type: messageTypes.SUCCESS,
             source: name,
             text: "Your playback has been shuffled.",
@@ -73,13 +68,13 @@ const buttonFunctions = {
         }
       })
       .catch((error) => {
-        updateMessageList(messageActions.CREATE, {
+        addNewMessage({
           type: messageTypes.ERROR,
           source: name,
           text: "That didn't work; your playback was unchanged.",
         });
       }),
-  CANDLES: (access_token, updateMessageList, name) => {
+  CANDLES: (access_token, addNewMessage, name) => {
     const { start, end } = candlesTime;
 
     request("me/player/play", "PUT", access_token, {
@@ -94,7 +89,7 @@ const buttonFunctions = {
       .then((response) => {
         const { status } = response;
         if (status === 204) {
-          updateMessageList(messageActions.CREATE, {
+          addNewMessage({
             type: messageTypes.SUCCESS,
             source: name,
             text: "Burning sage is cool.",
@@ -106,7 +101,7 @@ const buttonFunctions = {
               .then((response) => {
                 const { status } = response;
                 if (status === 204) {
-                  updateMessageList(messageActions.CREATE, {
+                  addNewMessage({
                     type: messageTypes.INFO,
                     source: name,
                     text: "Don't set off the fire alarm.",
@@ -116,7 +111,7 @@ const buttonFunctions = {
                 }
               })
               .catch((error) => {
-                updateMessageList(messageActions.CREATE, {
+                addNewMessage({
                   type: messageTypes.WARNING,
                   source: name,
                   text: "The song should've been paused here.",
@@ -128,7 +123,7 @@ const buttonFunctions = {
         }
       })
       .catch((error) => {
-        updateMessageList(messageActions.CREATE, {
+        addNewMessage({
           type: messageTypes.ERROR,
           source: name,
           text: error.message || "It looks like something went awry.",
@@ -138,6 +133,6 @@ const buttonFunctions = {
 };
 
 export const getButtonOnClick =
-  (buttonId, access_token, updateMessageList = () => {}, name = "") =>
+  (buttonId, access_token, addNewMessage = () => {}, name = "") =>
   () =>
-    buttonFunctions[buttonId](access_token, updateMessageList, name);
+    buttonFunctions[buttonId](access_token, addNewMessage, name);

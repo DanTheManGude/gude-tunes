@@ -32,7 +32,6 @@ body {
 
 .message {
   padding: 10px;
-  padding-right: 38px;
   color: white;
   width: 275px;
   margin: 20px auto;
@@ -52,23 +51,6 @@ body {
 }
 .msg-WARNING {
   background-color: #f0ad4e;
-}
-
-.close-message {
-  color: white;
-  font-weight: bold;
-  float: right;
-  font-size: 22px;
-  cursor: pointer;
-  transition: 0.3s;
-  position: absolute;
-  top: 50%;
-  right: 5%;
-  transform: translateY(-50%);
-}
-
-.close-message:hover {
-  color: black;
 }
 
 .loginButton {

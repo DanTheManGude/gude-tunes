@@ -1,15 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   requestAuth,
   calculateAuthentication,
   getButtonOnClick,
 } from "./Utils";
-import {
-  messageActions,
-  messageTypes,
-  buttonIds,
-  buttonProperties,
-} from "./Constants";
+import { messageTypes, buttonIds, buttonProperties } from "./Constants";
 
 function App() {
   const {
@@ -18,64 +13,42 @@ function App() {
     hashItems: { access_token },
   } = calculateAuthentication();
 
-  const startingMessage =
-    code === -1
-      ? {
-          type: messageTypes.ERROR,
-          text: message,
-        }
-      : code === 1
-      ? {
-          type: messageTypes.SUCCESS,
-          text: "Login succesfull!",
-        }
-      : {
-          type: messageTypes.INFO,
-          source: "Welcome",
-          text: "Please login below to use the app.",
-        };
+  const [messageList, setMessageList] = useState([]);
 
-  const [messageList, setMessageList] = useState([
-    { ...startingMessage, id: 0 },
-  ]);
-  const [messageId, setMessageId] = useState(1);
-
-  const getNewId = () => {
-    setMessageId((currentState) => currentState + 1);
-    return messageId;
+  const addNewMessage = (newMessage) => {
+    setMessageList((currentState) => currentState.concat(newMessage));
+    setTimeout(() => {
+      setMessageList((currentState) => currentState.slice(1));
+    }, 6001);
   };
 
-  const updateMessageList = (action, value) => {
-    switch (action) {
-      case messageActions.CREATE:
-        const newId = getNewId();
-        setMessageList((currentState) => [
-          ...currentState,
-          { ...value, id: newId },
-        ]);
-        return newId;
-      case messageActions.DELETE:
-        setMessageList((currentState) =>
-          currentState.filter((element) => element.id !== value)
-        );
-        return 0;
-      default:
-        return -1;
-    }
-  };
+  useEffect(() => {
+    const startingMessage =
+      code === -1
+        ? {
+            type: messageTypes.ERROR,
+            text: message,
+          }
+        : code === 1
+        ? {
+            type: messageTypes.SUCCESS,
+            text: "Login succesfull!",
+          }
+        : {
+            type: messageTypes.INFO,
+            source: "Welcome",
+            text: "Please login below to use the app.",
+          };
+
+    addNewMessage(startingMessage);
+  }, [code, message]);
 
   return (
     <div>
-      {messageList.map((message) => {
-        const { type, text, source = "", id } = message;
+      {messageList.map((message, index) => {
+        const { type, text, source = "" } = message;
         return (
-          <div key={`msg-${id}`} className={`message msg-${type}`}>
-            <span
-              className="close-message"
-              onClick={() => updateMessageList(messageActions.DELETE, id)}
-            >
-              &times;
-            </span>
+          <div key={`msg-${index}`} className={`message msg-${type}`}>
             {source && <strong>{source}: </strong>}
             {text}
           </div>
@@ -92,7 +65,7 @@ function App() {
               onClick={getButtonOnClick(
                 buttonId,
                 access_token,
-                updateMessageList,
+                addNewMessage,
                 name
               )}
             >
