@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import ButtonList from "./ButtonList";
-import LoginButton from "./LoginButton";
-import { calculateAuthentication } from "../Utils";
+import { requestAuth, calculateAuthentication } from "../Utils";
 import { messageActions, messageTypes } from "../Constants";
 
 function App() {
@@ -74,7 +73,9 @@ function App() {
       {code === 1 ? (
         <ButtonList hashItems={payload} updateMessageList={updateMessageList} />
       ) : (
-        <LoginButton />
+        <button className="loginButton" onClick={requestAuth}>
+          Login
+        </button>
       )}
     </div>
   );

@@ -1,8 +1,8 @@
 import React from "react";
 import * as PropTypes from "prop-types";
 
-import ShuffleButton from "./UtilityButtons/ShuffleButton";
-import CandlesButton from "./UtilityButtons/CandlesButton";
+import { buttonIds, buttonProperties } from "../Constants";
+import { getButtonOnClick } from "../Utils";
 
 function ButtonList(props) {
   const {
@@ -12,18 +12,22 @@ function ButtonList(props) {
 
   return (
     <div>
-      <ShuffleButton
-        access_token={access_token}
-        updateMessageList={updateMessageList}
-        name="Shuffle"
-        text="Activate Shuffle"
-      />
-      <CandlesButton
-        access_token={access_token}
-        updateMessageList={updateMessageList}
-        name="Candles"
-        text="Don't light candles"
-      />
+      {buttonIds.map((buttonId) => {
+        const { text, classNames = "", name } = buttonProperties[buttonId];
+        return (
+          <button
+            className={`utility-btn ${classNames}`}
+            onClick={getButtonOnClick(
+              buttonId,
+              access_token,
+              updateMessageList,
+              name
+            )}
+          >
+            {text}
+          </button>
+        );
+      })}
     </div>
   );
 }

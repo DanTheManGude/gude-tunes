@@ -67,7 +67,7 @@ body {
   color: black;
 }
 
-.authButton {
+.loginButton {
   background-color: #1db954;
   border-color: rgb(21, 133, 60);
   border-radius: 500px;
@@ -84,12 +84,12 @@ body {
   width: 250px;
 }
 
-.authButton:hover {
+.loginButton:hover {
   background-color: #1ed760;
   border-color: rgb(26, 163, 74);
 }
 
-.authButton:active {
+.loginButton:active {
   background-color: #1aa34a;
   border-color: rgb(8, 53, 24);
 }
