@@ -1,4 +1,11 @@
-import { scopesList, messageTypes, candlesTime } from "./Constants";
+import emailjs from "emailjs-com";
+import {
+  scopesList,
+  messageTypes,
+  candlesTime,
+  emailServiceId,
+  templateId,
+} from "./Constants";
 
 export const calculateAuthentication = () => {
   const authentication = { code: null, hashItems: {}, message: "" };
@@ -189,3 +196,28 @@ export const getButtonOnClick =
   (buttonId, access_token, addNewMessage = () => {}, name = "") =>
   () =>
     buttonFunctions[buttonId](access_token, addNewMessage, name);
+
+const getEmailLink = ({ displayName, email }) =>
+  `mailto:dgude31@outlook.com?subject=Gude%20Tunes%20Access&body=Hello%2C%0D%0A%0D%0AI%20would%20like%20to%20have%20access%20to%20the%20Gude%20Tunes%20website%20functionality%2C%20but%20the%20request%20button%20did%20not%20work.%20My%20name%20is%2C${displayName}%2C%20and%20my%20email%20is%2C${email}.%0D%0A%0D%0AThhank%20you!`;
+
+export const getSendEmail = (addNewMessage, userInfo) => {
+  const messageSource = "Request Access";
+  emailjs.send(emailServiceId, templateId, userInfo).then(
+    (response) => {
+      addNewMessage({
+        type: messageTypes.SUCCESS,
+        source: messageSource,
+        text: "The request was put through. You should recieve a confirmation email shortly.",
+      });
+    },
+    (error) => {
+      addNewMessage({
+        type: messageTypes.ERROR,
+        source: messageSource,
+        text: `The request was unsuccessful. You can reach out to <a href="mailto:${getEmailLink(
+          userInfo
+        )}">dgude31@outlook.com</a> directly.`,
+      });
+    }
+  );
+};

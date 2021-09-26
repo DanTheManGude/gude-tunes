@@ -1,3 +1,5 @@
+export const existingUsers = ["dgude31@gmail.com", "emtemple211@gmail.com"];
+
 export const scopesList = [
   "user-read-private",
   "user-read-email",
@@ -20,3 +22,6 @@ export const buttonProperties = {
 };
 
 export const candlesTime = { start: 13930, end: 21200 };
+
+export const emailServiceId = "service_sbv0ia4";
+export const templateId = "template_fe1e5ws";
