@@ -261,9 +261,46 @@ const saturdayFunction = (access_token, addNewMessage, name) => {
   playSaturday = true;
 };
 
+const duckDuckGooseFuntion = (access_token, addNewMessage, name) => {
+  request("playlists/5gR6gvNGivsJJA5bMwolTU", "GET", access_token)
+    .then((r) => r.json())
+    .then((response) => {
+      const { tracks } = response;
+      const { total, items } = tracks;
+      const trackIndex = Date.now() % total;
+      console.log(trackIndex);
+      const trackURI = items[trackIndex].track.uri;
+      request("me/player/queue", "POST", access_token, undefined, {
+        uri: trackURI,
+      })
+        .then((resp) => {
+          const { status } = resp;
+          if (status !== 204) {
+            throw resp;
+          }
+          addNewMessage({
+            type: messageTypes.SUCCESS,
+            source: name,
+            text: "A random song from our friends has been added to the queue. <3",
+          });
+        })
+        .catch((error) => {
+          throw error;
+        });
+    })
+    .catch((error) => {
+      addNewMessage({
+        type: messageTypes.ERROR,
+        source: name,
+        text: error.message || "It looks like something went awry.",
+      });
+    });
+};
+
 const buttonFunctions = {
   SHUFFLE: shuffleFunction,
   SATURDAY: saturdayFunction,
+  DDG: duckDuckGooseFuntion,
   CANDLES: candlesFunction,
   BOSTON: bostonFunction,
 };
