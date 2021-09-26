@@ -86,7 +86,7 @@ const shuffleFunction = (access_token, addNewMessage, name) =>
           text: "Your playback has been shuffled.",
         });
       } else {
-        throw status;
+        throw response;
       }
     })
     .catch((error) => {
@@ -121,16 +121,16 @@ const candlesFunction = (access_token, addNewMessage, name) => {
           request("me/player/pause", "PUT", access_token, {
             body: "",
           })
-            .then((response) => {
-              const { status } = response;
-              if (status === 204) {
+            .then((resp) => {
+              const { status: statusCode } = resp;
+              if (statusCode === 204) {
                 addNewMessage({
                   type: messageTypes.INFO,
                   source: name,
                   text: "Don't set off the fire alarm.",
                 });
               } else {
-                throw status;
+                throw resp;
               }
             })
             .catch((error) => {
@@ -142,7 +142,7 @@ const candlesFunction = (access_token, addNewMessage, name) => {
             });
         }, end - start);
       } else {
-        throw status;
+        throw response;
       }
     })
     .catch((error) => {
@@ -172,7 +172,7 @@ const bostonFunction = (access_token, addNewMessage, name) => {
               text: "Safe travels.",
             });
           } else {
-            throw status;
+            throw response;
           }
         });
       }
@@ -186,8 +186,121 @@ const bostonFunction = (access_token, addNewMessage, name) => {
     });
 };
 
+var playSaturday = false;
+const saturdayFunction = (access_token, addNewMessage, name) => {
+  const day = new Date().getDay();
+
+  switch (day) {
+    case 1:
+      addNewMessage({
+        type: messageTypes.INFO,
+        source: name,
+        text: "It is not Satuday. It is Monday, slow down.",
+      });
+      break;
+    case 3:
+      addNewMessage({
+        type: messageTypes.INFO,
+        source: name,
+        text: "It is not Satuday. It is Wednesday, not a sound.",
+      });
+      break;
+    case 5:
+      addNewMessage({
+        type: messageTypes.INFO,
+        source: name,
+        text: "It is not Satuday. It is Friday, might get loud.",
+      });
+      break;
+    case 6:
+      addNewMessage({
+        type: messageTypes.INFO,
+        source: name,
+        text: "It is Satuday. We paint the town!",
+      });
+      playSaturday = true;
+      break;
+    default:
+      addNewMessage({
+        type: messageTypes.INFO,
+        source: name,
+        text: "It is not Satuday. Have you lost your sense of time or two?",
+      });
+      break;
+  }
+
+  if (playSaturday) {
+    request("me/player/play", "PUT", access_token, {
+      body: JSON.stringify({
+        context_uri: "spotify:playlist:5gR6gvNGivsJJA5bMwolTU",
+        offset: {
+          position: 4,
+        },
+      }),
+    })
+      .then((response) => {
+        const { status } = response;
+        if (status === 204) {
+          addNewMessage({
+            type: messageTypes.SUCCESS,
+            source: name,
+            text: "Life moves slow on the ocean floor (feeling great)",
+          });
+        } else {
+          throw response;
+        }
+      })
+      .catch((error) => {
+        addNewMessage({
+          type: messageTypes.ERROR,
+          source: name,
+          text: error.message || "It looks like something went awry.",
+        });
+      });
+  }
+  playSaturday = true;
+};
+
+const duckDuckGooseFuntion = (access_token, addNewMessage, name) => {
+  request("playlists/5gR6gvNGivsJJA5bMwolTU", "GET", access_token)
+    .then((r) => r.json())
+    .then((response) => {
+      const { tracks } = response;
+      const { total, items } = tracks;
+      const trackIndex = Date.now() % total;
+      console.log(trackIndex);
+      const trackURI = items[trackIndex].track.uri;
+      request("me/player/queue", "POST", access_token, undefined, {
+        uri: trackURI,
+      })
+        .then((resp) => {
+          const { status } = resp;
+          if (status !== 204) {
+            throw resp;
+          }
+          addNewMessage({
+            type: messageTypes.SUCCESS,
+            source: name,
+            text: "A random song from our friends has been added to the queue. <3",
+          });
+        })
+        .catch((error) => {
+          throw error;
+        });
+    })
+    .catch((error) => {
+      addNewMessage({
+        type: messageTypes.ERROR,
+        source: name,
+        text: error.message || "It looks like something went awry.",
+      });
+    });
+};
+
 const buttonFunctions = {
   SHUFFLE: shuffleFunction,
+  SATURDAY: saturdayFunction,
+  DDG: duckDuckGooseFuntion,
   CANDLES: candlesFunction,
   BOSTON: bostonFunction,
 };
@@ -221,3 +334,5 @@ export const getSendEmail = (addNewMessage, userInfo) => {
     }
   );
 };
+
+export const isSaturday = () => new Date().getDay() === 7;
