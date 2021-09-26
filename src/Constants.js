@@ -13,10 +13,11 @@ export const messageTypes = {
   WARNING: "WARNING",
 };
 
-export const buttonIds = ["SHUFFLE", "CANDLES", "BOSTON"];
+export const buttonIds = ["SHUFFLE", "SATURDAY", "CANDLES", "BOSTON"];
 
 export const buttonProperties = {
   SHUFFLE: { text: "Activate Shuffle", name: "Shuffle" },
+  SATURDAY: { text: "Is it Saturday?", name: "Saturday" },
   CANDLES: { text: "Don't light candles", name: "Candles" },
   BOSTON: { text: "Boston Bound", name: "Boston" },
 };
