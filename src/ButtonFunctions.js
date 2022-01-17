@@ -209,23 +209,36 @@ export const syncPlaylistsFunction =
       .then(([selfUris, otherUris]) => {
         const toAddUris = otherUris.filter((uri) => !selfUris.includes(uri));
 
-        makeRequest(`playlists/${selfPlaylist}/tracks`, "POST", access_token, {
-          body: JSON.stringify({
-            uris: toAddUris,
-          }),
-        })
-          .then((response) => {
-            const { status } = response;
-            if (status !== 201) {
-              throw response;
+        if (toAddUris.length === 0) {
+          addNewMessage({
+            type: messageTypes.INFO,
+            source: name,
+            text: "Our playlists are already synced.",
+          });
+        } else {
+          makeRequest(
+            `playlists/${selfPlaylist}/tracks`,
+            "POST",
+            access_token,
+            {
+              body: JSON.stringify({
+                uris: toAddUris,
+              }),
             }
-            addNewMessage({
-              type: messageTypes.SUCCESS,
-              source: name,
-              text: "Our playlists have been synced.",
-            });
-          })
-          .catch(getAddErrorMessage(addNewMessage, name));
+          )
+            .then((response) => {
+              const { status } = response;
+              if (status !== 201) {
+                throw response;
+              }
+              addNewMessage({
+                type: messageTypes.SUCCESS,
+                source: name,
+                text: "Our playlists have been synced. :)",
+              });
+            })
+            .catch(getAddErrorMessage(addNewMessage, name));
+        }
       })
       .catch(getAddErrorMessage(addNewMessage, name));
   };
