@@ -11,6 +11,16 @@ export const existingUsersMap = {
   "emtemple211@gmail.com": 7,
 };
 
+const createUserPlaylistValue = (selfPlaylist, otherUserId) => ({
+  selfPlaylist,
+  otherUserId,
+});
+
+export const userPlaylistMap = {
+  1: createUserPlaylistValue("5zWTsTMwKffVVwnB3V04cW", 7),
+  7: createUserPlaylistValue("5gR6gvNGivsJJA5bMwolTU", 1),
+};
+
 export const scopesList = [
   "user-read-private",
   "user-read-email",

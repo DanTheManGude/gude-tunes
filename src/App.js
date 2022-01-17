@@ -130,7 +130,7 @@ function App() {
               buttonId,
               access_token,
               addNewMessage,
-              user.info.email
+              existingUsersMap[user.info.email]
             )}
           >
             {text}

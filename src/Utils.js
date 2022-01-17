@@ -89,9 +89,9 @@ export const makeRequest = (
   );
 
 export const getButtonOnClick =
-  (buttonId, access_token, addNewMessage = () => {}, userEmail) =>
+  (buttonId, access_token, addNewMessage = () => {}, userId) =>
   () => {
-    buttonProperties[buttonId].function(access_token, addNewMessage, userEmail);
+    buttonProperties[buttonId].function(access_token, addNewMessage, userId);
   };
 
 const getEmailLink = ({ displayName, email }) =>

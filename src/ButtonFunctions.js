@@ -1,5 +1,5 @@
 import { makeRequest } from "./Utils";
-import { messageTypes, candlesTime } from "./Constants";
+import { messageTypes, candlesTime, userPlaylistMap } from "./Constants";
 
 export const shuffleFunction = (name) => (access_token, addNewMessage) =>
   makeRequest("me/player/shuffle?state=true", "PUT", access_token, {
@@ -192,14 +192,14 @@ export const saturdayFunction = (name) => (access_token, addNewMessage) => {
 };
 
 export const mysteryDuckFunction =
-  (name) => (access_token, addNewMessage, userEmail) => {
-    makeRequest("playlists/5gR6gvNGivsJJA5bMwolTU", "GET", access_token)
+  (name) => (access_token, addNewMessage, userId) => {
+    const { selfPlaylist } = userPlaylistMap[userId];
+    makeRequest(`playlists/${selfPlaylist}`, "GET", access_token)
       .then((r) => r.json())
       .then((response) => {
         const { tracks } = response;
         const { total, items } = tracks;
         const trackIndex = Date.now() % total;
-        console.log(trackIndex);
         const trackURI = items[trackIndex].track.uri;
         makeRequest("me/player/queue", "POST", access_token, undefined, {
           uri: trackURI,
