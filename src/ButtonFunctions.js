@@ -1,4 +1,4 @@
-import { makeRequest, requestPlaylistUris } from "./Utils";
+import { makeRequest, requestPlaylistUris, getAddErrorMessage } from "./Utils";
 import { messageTypes, candlesTime, userPlaylistMap } from "./Constants";
 
 export const shuffleFunction = (name) => (access_token, addNewMessage) =>
@@ -17,13 +17,7 @@ export const shuffleFunction = (name) => (access_token, addNewMessage) =>
         throw response;
       }
     })
-    .catch((error) => {
-      addNewMessage({
-        type: messageTypes.ERROR,
-        source: name,
-        text: "That didn't work; your playback was unchanged.",
-      });
-    });
+    .catch(getAddErrorMessage(addNewMessage, name));
 
 export const candlesFunction = (name) => (access_token, addNewMessage) => {
   const { start, end } = candlesTime;
@@ -73,13 +67,7 @@ export const candlesFunction = (name) => (access_token, addNewMessage) => {
         throw response;
       }
     })
-    .catch((error) => {
-      addNewMessage({
-        type: messageTypes.ERROR,
-        source: name,
-        text: error.message || "It looks like something went awry.",
-      });
-    });
+    .catch(getAddErrorMessage(addNewMessage, name));
 };
 
 export const bostonFunction = (name) => (access_token, addNewMessage) => {
@@ -105,13 +93,7 @@ export const bostonFunction = (name) => (access_token, addNewMessage) => {
         });
       }
     })
-    .catch((error) => {
-      addNewMessage({
-        type: messageTypes.ERROR,
-        source: name,
-        text: error.message || "It looks like your package is delayed.",
-      });
-    });
+    .catch(getAddErrorMessage(addNewMessage, name));
 };
 
 var playSaturday = false;
@@ -180,13 +162,7 @@ export const saturdayFunction = (name) => (access_token, addNewMessage) => {
           throw response;
         }
       })
-      .catch((error) => {
-        addNewMessage({
-          type: messageTypes.ERROR,
-          source: name,
-          text: error.message || "It looks like something went awry.",
-        });
-      });
+      .catch(getAddErrorMessage(addNewMessage, name));
   }
   playSaturday = true;
 };
@@ -216,17 +192,9 @@ export const mysteryDuckFunction =
               text: "A random song from our friends has been added to the queue. <3",
             });
           })
-          .catch((error) => {
-            throw error;
-          });
+          .catch(getAddErrorMessage(addNewMessage, name));
       })
-      .catch((error) => {
-        addNewMessage({
-          type: messageTypes.ERROR,
-          source: name,
-          text: error.message || "It looks like something went awry.",
-        });
-      });
+      .catch(getAddErrorMessage(addNewMessage, name));
   };
 
 export const syncPlaylistsFunction =
@@ -240,6 +208,7 @@ export const syncPlaylistsFunction =
     ])
       .then(([selfUris, otherUris]) => {
         const toAddUris = otherUris.filter((uri) => !selfUris.includes(uri));
+
         makeRequest(`playlists/${selfPlaylist}/tracks`, "POST", access_token, {
           body: JSON.stringify({
             uris: toAddUris,
@@ -256,15 +225,7 @@ export const syncPlaylistsFunction =
               text: "Our playlists have been synced.",
             });
           })
-          .catch((error) => {
-            throw error;
-          });
+          .catch(getAddErrorMessage(addNewMessage, name));
       })
-      .catch((error) => {
-        addNewMessage({
-          type: messageTypes.ERROR,
-          source: name,
-          text: error.message || "It looks like something went awry.",
-        });
-      });
+      .catch(getAddErrorMessage(addNewMessage, name));
   };

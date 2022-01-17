@@ -142,3 +142,11 @@ export const requestPlaylistUris = (playlistId, access_token) =>
       return resp.json();
     })
     .then(({ tracks: { items } }) => items.map((item) => item.track.uri));
+
+export const getAddErrorMessage = (addNewMessage, source) => (error) => {
+  addNewMessage({
+    type: messageTypes.ERROR,
+    source,
+    text: error.message || "It looks like something went awry.",
+  });
+};
