@@ -52,7 +52,12 @@ function App() {
 
     console.log(access_token);
     makeRequest("me", "GET", access_token)
-      .then((r) => r.json())
+      .then((r) => {
+        if (r.status === 401) {
+          window.location.href = `${window.location.origin}${window.location.pathname}`;
+        }
+        return r.json();
+      })
       .then((response) => {
         const { email, display_name: displayName } = response;
         const isNew = !Object.keys(existingUsersMap).includes(email);
