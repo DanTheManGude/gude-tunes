@@ -23,11 +23,11 @@ function App() {
   const [messageList, setMessageList] = useState([]);
   const [newUser, setNewUser] = useState({ is: false });
 
-  const addNewMessage = (newMessage) => {
+  const addNewMessage = (newMessage, time = 6001) => {
     setMessageList((currentState) => currentState.concat(newMessage));
     setTimeout(() => {
       setMessageList((currentState) => currentState.slice(1));
-    }, 6001);
+    }, time);
   };
 
   useEffect(() => {
@@ -55,29 +55,28 @@ function App() {
     if (!access_token) return;
 
     console.log(access_token);
-    request("/me", "GET", access_token)
+    request("me", "GET", access_token)
+      .then((r) => r.json())
       .then((response) => {
-        const { status } = response;
-        if (status === 200) {
-          const { email, display_name: displayName } = response;
-          if (!existingUsers.includes("email")) {
-            addNewMessage({
+        const { email, display_name: displayName } = response;
+        if (!existingUsers.includes(email)) {
+          addNewMessage(
+            {
               type: messageTypes.INFO,
               source: "Application",
-              text: "Only designated Spotify accounts can use the application. Click below to request access.",
-            });
-            setNewUser({ is: true, info: { email, displayName } });
-          }
-        } else {
-          throw response;
+              text: `Sorry ${displayName}, Only designated Spotify accounts can use the application. Click below to request access.`,
+            },
+            12000
+          );
+          setNewUser({ is: true, info: { email, displayName } });
         }
       })
       .catch((error) => {
-        // addNewMessage({
-        //   type: messageTypes.WARNING,
-        //   source: "Application",
-        //   text: "Something isn't right, the app may be currently unavailable.",
-        // });
+        addNewMessage({
+          type: messageTypes.WARNING,
+          source: "Application",
+          text: "Something isn't right, the app may be currently unavailable.",
+        });
         console.error(error);
       });
   }, [access_token]);
@@ -94,7 +93,7 @@ function App() {
         );
       })}
 
-      {newUser.is && (
+      {newUser.is ? (
         <button
           key={"NEWUSER"}
           className={"utility-btn new-user-btn"}
@@ -102,9 +101,7 @@ function App() {
         >
           Request Access
         </button>
-      )}
-
-      {code === 1 ? (
+      ) : code === 1 ? (
         buttonIds.map((buttonId) => {
           const { text, classNames = "", name } = buttonProperties[buttonId];
           return (

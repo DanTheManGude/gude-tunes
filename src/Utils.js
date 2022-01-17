@@ -3,8 +3,7 @@ import {
   scopesList,
   messageTypes,
   candlesTime,
-  emailServiceId,
-  templateId,
+  emailConfig,
 } from "./Constants";
 
 export const calculateAuthentication = () => {
@@ -311,25 +310,33 @@ export const getButtonOnClick =
     buttonFunctions[buttonId](access_token, addNewMessage, name);
 
 const getEmailLink = ({ displayName, email }) =>
-  `mailto:dgude31@outlook.com?subject=Gude%20Tunes%20Access&body=Hello%2C%0D%0A%0D%0AI%20would%20like%20to%20have%20access%20to%20the%20Gude%20Tunes%20website%20functionality%2C%20but%20the%20request%20button%20did%20not%20work.%20My%20name%20is%2C${displayName}%2C%20and%20my%20email%20is%2C${email}.%0D%0A%0D%0AThhank%20you!`;
+  `mailto:dgude31@outlook.com?subject=Gude%20Tunes%20Access&body=Hello%2C%0D%0A%0D%0AI%20would%20like%20to%20have%20access%20to%20the%20Gude%20Tunes%20website%20functionality%2C%20but%20the%20request%20button%20did%20not%20work.%20My%20name%20is%2C%20${displayName}%2C%20and%20my%20email%20is%2C%20${email}.%0D%0A%0D%0AThhank%20you!`;
 
-export const getSendEmail = (addNewMessage, userInfo) => {
+export const getSendEmail = (addNewMessage, userInfo) => () => {
   const messageSource = "Request Access";
-  emailjs.send(emailServiceId, templateId, userInfo).then(
+  const { serviceId, templateId, userId } = emailConfig;
+  emailjs.send(serviceId, templateId, userInfo, userId).then(
     (response) => {
-      addNewMessage({
-        type: messageTypes.SUCCESS,
-        source: messageSource,
-        text: "The request was put through. You should recieve a confirmation email shortly.",
-      });
+      addNewMessage(
+        {
+          type: messageTypes.SUCCESS,
+          source: messageSource,
+          text: "The request was put through. You should recieve a confirmation email shortly (be sure to check your junk folder).",
+        },
+        10000
+      );
     },
     (error) => {
       addNewMessage({
         type: messageTypes.ERROR,
         source: messageSource,
-        text: `The request was unsuccessful. You can reach out to <a href="mailto:${getEmailLink(
-          userInfo
-        )}">dgude31@outlook.com</a> directly.`,
+        text: (
+          <span>
+            The request was unsuccessful. You can reach out to&nbsp;
+            <a href={getEmailLink(userInfo)}>dgude31@outlook.com</a>
+            &nbsp;directly.
+          </span>
+        ),
       });
     }
   );
