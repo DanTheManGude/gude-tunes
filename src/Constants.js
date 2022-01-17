@@ -4,6 +4,7 @@ import {
   mysteryDuckFunction,
   candlesFunction,
   bostonFunction,
+  syncPlaylistsFunction,
 } from "./ButtonFunctions";
 
 export const existingUsersMap = {
@@ -25,6 +26,7 @@ export const scopesList = [
   "user-read-private",
   "user-read-email",
   "user-modify-playback-state",
+  "playlist-modify-public",
 ];
 
 export const messageTypes = {
@@ -38,21 +40,22 @@ const createProperty = (text, name, func, classNames = []) => {
   return { text, name, function: func(name), classNames };
 };
 
-export const buttonIds = {
+export const BUTTON_IDS = {
   SHUFFLE: "SHUFFLE",
   SATURDAY: "SATURDAY",
   MYSTERY_DUCK: "MYSTERY_DUCK",
   CANDLES: "CANDLES",
   BOSTON: "BOSTON",
+  SYNC_PLAYLISTS: "SYNC_PLAYLISTS",
 };
 
 export const buttonProperties = {
-  [buttonIds.SHUFFLE]: createProperty(
+  [BUTTON_IDS.SHUFFLE]: createProperty(
     "Activate Shuffle",
     "Shuffle",
     shuffleFunction
   ),
-  [buttonIds.SATURDAY]: createProperty(
+  [BUTTON_IDS.SATURDAY]: createProperty(
     "Is it Saturday?",
     "Saturday",
     saturdayFunction
@@ -62,15 +65,21 @@ export const buttonProperties = {
     "Mystery Love",
     mysteryDuckFunction
   ),
-  [buttonIds.CANDLES]: createProperty(
+  [BUTTON_IDS.CANDLES]: createProperty(
     "Don't light candles",
     "Candles",
     candlesFunction
   ),
-  [buttonIds.BOSTON]: createProperty(
+  [BUTTON_IDS.BOSTON]: createProperty(
     "Boston Bound",
     "Boston Bound",
     bostonFunction
+  ),
+  [BUTTON_IDS.SYNC_PLAYLISTS]: createProperty(
+    "Sync Playlists",
+    "Sync Playlists",
+    syncPlaylistsFunction,
+    ["sync-playlist-btn"]
   ),
 };
 

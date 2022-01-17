@@ -2,7 +2,7 @@ import emailjs from "emailjs-com";
 import {
   scopesList,
   messageTypes,
-  buttonIds,
+  BUTTON_IDS,
   existingUsersMap,
   emailConfig,
   buttonProperties,
@@ -48,7 +48,7 @@ export const requestAuth = () => {
 };
 
 export const getButtonIdsForUser = (userEmail) => {
-  const allButtonIds = Object.keys(buttonIds);
+  const allButtonIds = Object.keys(BUTTON_IDS);
   switch (existingUsersMap[userEmail]) {
     case 1:
       return allButtonIds;
@@ -56,7 +56,12 @@ export const getButtonIdsForUser = (userEmail) => {
       return allButtonIds;
     default:
       return allButtonIds.filter(
-        (id) => ![buttonIds.MYSTERY_DUCK, buttonIds.CANDLES].includes(id)
+        (id) =>
+          ![
+            BUTTON_IDS.SYNC_PLAYLISTS,
+            BUTTON_IDS.MYSTERY_DUCK,
+            BUTTON_IDS.CANDLES,
+          ].includes(id)
       );
   }
 };
@@ -126,3 +131,14 @@ export const getSendEmail = (addNewMessage, userInfo) => () => {
     }
   );
 };
+
+export const requestPlaylistUris = (playlistId, access_token) =>
+  makeRequest(`playlists/${playlistId}`, "GET", access_token)
+    .then((resp) => {
+      const { status: statusCode } = resp;
+      if (statusCode !== 200) {
+        throw resp;
+      }
+      return resp.json();
+    })
+    .then(({ tracks: { items } }) => items.map((item) => item.track.uri));

@@ -1,4 +1,4 @@
-import { makeRequest } from "./Utils";
+import { makeRequest, requestPlaylistUris } from "./Utils";
 import { messageTypes, candlesTime, userPlaylistMap } from "./Constants";
 
 export const shuffleFunction = (name) => (access_token, addNewMessage) =>
@@ -194,6 +194,7 @@ export const saturdayFunction = (name) => (access_token, addNewMessage) => {
 export const mysteryDuckFunction =
   (name) => (access_token, addNewMessage, userId) => {
     const { selfPlaylist } = userPlaylistMap[userId];
+
     makeRequest(`playlists/${selfPlaylist}`, "GET", access_token)
       .then((r) => r.json())
       .then((response) => {
@@ -213,6 +214,46 @@ export const mysteryDuckFunction =
               type: messageTypes.SUCCESS,
               source: name,
               text: "A random song from our friends has been added to the queue. <3",
+            });
+          })
+          .catch((error) => {
+            throw error;
+          });
+      })
+      .catch((error) => {
+        addNewMessage({
+          type: messageTypes.ERROR,
+          source: name,
+          text: error.message || "It looks like something went awry.",
+        });
+      });
+  };
+
+export const syncPlaylistsFunction =
+  (name) => (access_token, addNewMessage, userId) => {
+    const { selfPlaylist, otherUserId } = userPlaylistMap[userId];
+    const { selfPlaylist: otherPlaylist } = userPlaylistMap[otherUserId];
+
+    Promise.all([
+      requestPlaylistUris(selfPlaylist, access_token),
+      requestPlaylistUris(otherPlaylist, access_token),
+    ])
+      .then(([selfUris, otherUris]) => {
+        const toAddUris = otherUris.filter((uri) => !selfUris.includes(uri));
+        makeRequest(`playlists/${selfPlaylist}/tracks`, "POST", access_token, {
+          body: JSON.stringify({
+            uris: toAddUris,
+          }),
+        })
+          .then((response) => {
+            const { status } = response;
+            if (status !== 201) {
+              throw response;
+            }
+            addNewMessage({
+              type: messageTypes.SUCCESS,
+              source: name,
+              text: "Our playlists have been synced.",
             });
           })
           .catch((error) => {

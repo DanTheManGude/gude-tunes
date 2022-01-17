@@ -109,3 +109,12 @@ body {
   background-color: rgba(255, 255, 255, 0.623);
   color: black;
 }
+
+.sync-playlist-btn {
+  background-color: rgba(97, 3, 247, 0.356);
+}
+
+.sync-playlist-btn:hover {
+  background-color: rgb(114, 32, 245);
+  color: black;
+}
