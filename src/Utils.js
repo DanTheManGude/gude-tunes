@@ -2,8 +2,10 @@ import emailjs from "emailjs-com";
 import {
   scopesList,
   messageTypes,
-  candlesTime,
+  buttonIds,
+  existingUsersMap,
   emailConfig,
+  buttonProperties,
 } from "./Constants";
 
 export const calculateAuthentication = () => {
@@ -45,7 +47,21 @@ export const requestAuth = () => {
   window.location.href = `https://accounts.spotify.com/authorize?client_id=125aeb2f61c242c68fe33802c481bb08&redirect_uri=${redirectUri}&scope=${scopes}&response_type=token&state=202102121300`;
 };
 
-export const request = (
+export const getButtonIdsForUser = (userEmail) => {
+  const allButtonIds = Object.keys(buttonIds);
+  switch (existingUsersMap[userEmail]) {
+    case 1:
+      return allButtonIds;
+    case 7:
+      return allButtonIds;
+    default:
+      return allButtonIds.filter(
+        (id) => ![buttonIds.MYSTERY_DUCK, buttonIds.CANDLES].includes(id)
+      );
+  }
+};
+
+export const makeRequest = (
   path,
   method = "GET",
   access_token,
@@ -72,242 +88,11 @@ export const request = (
     }
   );
 
-const shuffleFunction = (access_token, addNewMessage, name) =>
-  request("me/player/shuffle?state=true", "PUT", access_token, {
-    body: "",
-  })
-    .then((response) => {
-      const { status } = response;
-      if (status === 204) {
-        addNewMessage({
-          type: messageTypes.SUCCESS,
-          source: name,
-          text: "Your playback has been shuffled.",
-        });
-      } else {
-        throw response;
-      }
-    })
-    .catch((error) => {
-      addNewMessage({
-        type: messageTypes.ERROR,
-        source: name,
-        text: "That didn't work; your playback was unchanged.",
-      });
-    });
-
-const candlesFunction = (access_token, addNewMessage, name) => {
-  const { start, end } = candlesTime;
-
-  request("me/player/play", "PUT", access_token, {
-    body: JSON.stringify({
-      context_uri: "spotify:album:3QrkHSj8pBzE1Kwhpnktkw",
-      offset: {
-        position: 4,
-      },
-      position_ms: start,
-    }),
-  })
-    .then((response) => {
-      const { status } = response;
-      if (status === 204) {
-        addNewMessage({
-          type: messageTypes.SUCCESS,
-          source: name,
-          text: "Burning sage is cool.",
-        });
-        setTimeout(() => {
-          request("me/player/pause", "PUT", access_token, {
-            body: "",
-          })
-            .then((resp) => {
-              const { status: statusCode } = resp;
-              if (statusCode === 204) {
-                addNewMessage({
-                  type: messageTypes.INFO,
-                  source: name,
-                  text: "Don't set off the fire alarm.",
-                });
-              } else {
-                throw resp;
-              }
-            })
-            .catch((error) => {
-              addNewMessage({
-                type: messageTypes.WARNING,
-                source: name,
-                text: "The song should've been paused here.",
-              });
-            });
-        }, end - start);
-      } else {
-        throw response;
-      }
-    })
-    .catch((error) => {
-      addNewMessage({
-        type: messageTypes.ERROR,
-        source: name,
-        text: error.message || "It looks like something went awry.",
-      });
-    });
-};
-
-const bostonFunction = (access_token, addNewMessage, name) => {
-  request("me/player/queue", "POST", access_token, undefined, {
-    uri: "spotify:track:7rSERmjAT38lC5QhJ8hnQc",
-  })
-    .then((response) => {
-      const { status } = response;
-      if (status === 204) {
-        request("me/player/next", "POST", access_token, {
-          body: "",
-        }).then((response) => {
-          const { status } = response;
-          if (status === 204) {
-            addNewMessage({
-              type: messageTypes.SUCCESS,
-              source: name,
-              text: "Safe travels.",
-            });
-          } else {
-            throw response;
-          }
-        });
-      }
-    })
-    .catch((error) => {
-      addNewMessage({
-        type: messageTypes.ERROR,
-        source: name,
-        text: error.message || "It looks like your package is delayed.",
-      });
-    });
-};
-
-var playSaturday = false;
-const saturdayFunction = (access_token, addNewMessage, name) => {
-  const day = new Date().getDay();
-
-  switch (day) {
-    case 1:
-      addNewMessage({
-        type: messageTypes.INFO,
-        source: name,
-        text: "It is not Satuday. It is Monday, slow down.",
-      });
-      break;
-    case 3:
-      addNewMessage({
-        type: messageTypes.INFO,
-        source: name,
-        text: "It is not Satuday. It is Wednesday, not a sound.",
-      });
-      break;
-    case 5:
-      addNewMessage({
-        type: messageTypes.INFO,
-        source: name,
-        text: "It is not Satuday. It is Friday, might get loud.",
-      });
-      break;
-    case 6:
-      addNewMessage({
-        type: messageTypes.INFO,
-        source: name,
-        text: "It is Satuday. We paint the town!",
-      });
-      playSaturday = true;
-      break;
-    default:
-      addNewMessage({
-        type: messageTypes.INFO,
-        source: name,
-        text: "It is not Satuday. Have you lost your sense of time or two?",
-      });
-      break;
-  }
-
-  if (playSaturday) {
-    request("me/player/play", "PUT", access_token, {
-      body: JSON.stringify({
-        context_uri: "spotify:playlist:5gR6gvNGivsJJA5bMwolTU",
-        offset: {
-          position: 4,
-        },
-      }),
-    })
-      .then((response) => {
-        const { status } = response;
-        if (status === 204) {
-          addNewMessage({
-            type: messageTypes.SUCCESS,
-            source: name,
-            text: "Life moves slow on the ocean floor (feeling great)",
-          });
-        } else {
-          throw response;
-        }
-      })
-      .catch((error) => {
-        addNewMessage({
-          type: messageTypes.ERROR,
-          source: name,
-          text: error.message || "It looks like something went awry.",
-        });
-      });
-  }
-  playSaturday = true;
-};
-
-const duckDuckGooseFuntion = (access_token, addNewMessage, name) => {
-  request("playlists/5gR6gvNGivsJJA5bMwolTU", "GET", access_token)
-    .then((r) => r.json())
-    .then((response) => {
-      const { tracks } = response;
-      const { total, items } = tracks;
-      const trackIndex = Date.now() % total;
-      console.log(trackIndex);
-      const trackURI = items[trackIndex].track.uri;
-      request("me/player/queue", "POST", access_token, undefined, {
-        uri: trackURI,
-      })
-        .then((resp) => {
-          const { status } = resp;
-          if (status !== 204) {
-            throw resp;
-          }
-          addNewMessage({
-            type: messageTypes.SUCCESS,
-            source: name,
-            text: "A random song from our friends has been added to the queue. <3",
-          });
-        })
-        .catch((error) => {
-          throw error;
-        });
-    })
-    .catch((error) => {
-      addNewMessage({
-        type: messageTypes.ERROR,
-        source: name,
-        text: error.message || "It looks like something went awry.",
-      });
-    });
-};
-
-const buttonFunctions = {
-  SHUFFLE: shuffleFunction,
-  SATURDAY: saturdayFunction,
-  DDG: duckDuckGooseFuntion,
-  CANDLES: candlesFunction,
-  BOSTON: bostonFunction,
-};
-
 export const getButtonOnClick =
-  (buttonId, access_token, addNewMessage = () => {}, name = "") =>
-  () =>
-    buttonFunctions[buttonId](access_token, addNewMessage, name);
+  (buttonId, access_token, addNewMessage = () => {}, userEmail) =>
+  () => {
+    buttonProperties[buttonId].function(access_token, addNewMessage, userEmail);
+  };
 
 const getEmailLink = ({ displayName, email }) =>
   `mailto:dgude31@outlook.com?subject=Gude%20Tunes%20Access&body=Hello%2C%0D%0A%0D%0AI%20would%20like%20to%20have%20access%20to%20the%20Gude%20Tunes%20website%20functionality%2C%20but%20the%20request%20button%20did%20not%20work.%20My%20name%20is%2C%20${displayName}%2C%20and%20my%20email%20is%2C%20${email}.%0D%0A%0D%0AThhank%20you!`;
@@ -341,5 +126,3 @@ export const getSendEmail = (addNewMessage, userInfo) => () => {
     }
   );
 };
-
-export const isSaturday = () => new Date().getDay() === 7;

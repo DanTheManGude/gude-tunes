@@ -1,4 +1,15 @@
-export const existingUsers = ["dgude31@gmail.com", "emtemple211@gmail.com"];
+import {
+  shuffleFunction,
+  saturdayFunction,
+  mysteryDuckFunction,
+  candlesFunction,
+  bostonFunction,
+} from "./ButtonFunctions";
+
+export const existingUsersMap = {
+  "dgude31@gmail.com": 1,
+  "emtemple211@gmail.com": 7,
+};
 
 export const scopesList = [
   "user-read-private",
@@ -13,14 +24,44 @@ export const messageTypes = {
   WARNING: "WARNING",
 };
 
-export const buttonIds = ["SHUFFLE", "SATURDAY", "DDG", "CANDLES", "BOSTON"];
+const createProperty = (text, name, func, classNames = []) => {
+  return { text, name, function: func(name), classNames };
+};
+
+export const buttonIds = {
+  SHUFFLE: "SHUFFLE",
+  SATURDAY: "SATURDAY",
+  MYSTERY_DUCK: "MYSTERY_DUCK",
+  CANDLES: "CANDLES",
+  BOSTON: "BOSTON",
+};
 
 export const buttonProperties = {
-  SHUFFLE: { text: "Activate Shuffle", name: "Shuffle" },
-  SATURDAY: { text: "Is it Saturday?", name: "Saturday" },
-  DDG: { text: "🖤 🦆 💜", name: "Duck, Duck, Goose" },
-  CANDLES: { text: "Don't light candles", name: "Candles" },
-  BOSTON: { text: "Boston Bound", name: "Boston" },
+  [buttonIds.SHUFFLE]: createProperty(
+    "Activate Shuffle",
+    "Shuffle",
+    shuffleFunction
+  ),
+  [buttonIds.SATURDAY]: createProperty(
+    "Is it Saturday?",
+    "Saturday",
+    saturdayFunction
+  ),
+  MYSTERY_DUCK: createProperty(
+    "Mystery 🦆",
+    "Mystery Love",
+    mysteryDuckFunction
+  ),
+  [buttonIds.CANDLES]: createProperty(
+    "Don't light candles",
+    "Candles",
+    candlesFunction
+  ),
+  [buttonIds.BOSTON]: createProperty(
+    "Boston Bound",
+    "Boston Bound",
+    bostonFunction
+  ),
 };
 
 export const candlesTime = { start: 13930, end: 21200 };

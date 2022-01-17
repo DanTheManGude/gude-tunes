@@ -2,16 +2,12 @@ import React, { useState, useEffect } from "react";
 import {
   requestAuth,
   calculateAuthentication,
+  getButtonIdsForUser,
   getButtonOnClick,
-  request,
+  makeRequest,
   getSendEmail,
 } from "./Utils";
-import {
-  messageTypes,
-  buttonIds,
-  buttonProperties,
-  existingUsers,
-} from "./Constants";
+import { messageTypes, buttonProperties, existingUsersMap } from "./Constants";
 
 function App() {
   const {
@@ -21,7 +17,7 @@ function App() {
   } = calculateAuthentication();
 
   const [messageList, setMessageList] = useState([]);
-  const [newUser, setNewUser] = useState({ is: false });
+  const [user, setUser] = useState();
 
   const addNewMessage = (newMessage, time = 6001) => {
     setMessageList((currentState) => currentState.concat(newMessage));
@@ -55,11 +51,12 @@ function App() {
     if (!access_token) return;
 
     console.log(access_token);
-    request("me", "GET", access_token)
+    makeRequest("me", "GET", access_token)
       .then((r) => r.json())
       .then((response) => {
         const { email, display_name: displayName } = response;
-        if (!existingUsers.includes(email)) {
+        const isNew = !Object.keys(existingUsersMap).includes(email);
+        if (isNew) {
           addNewMessage(
             {
               type: messageTypes.INFO,
@@ -68,8 +65,8 @@ function App() {
             },
             12000
           );
-          setNewUser({ is: true, info: { email, displayName } });
         }
+        setUser({ isNew, info: { email, displayName } });
       })
       .catch((error) => {
         addNewMessage({
@@ -81,49 +78,72 @@ function App() {
       });
   }, [access_token]);
 
-  return (
-    <div>
-      {messageList.map((message, index) => {
-        const { type, text, source = "" } = message;
-        return (
-          <div key={`msg-${index}`} className={`message msg-${type}`}>
-            {source && <strong>{source}: </strong>}
-            {text}
-          </div>
-        );
-      })}
+  const renderMessageList = () => {
+    return (
+      <div>
+        {messageList.map((message, index) => {
+          const { type, text, source = "" } = message;
+          return (
+            <div key={`msg-${index}`} className={`message msg-${type}`}>
+              {source && <strong>{source}: </strong>}
+              {text}
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
 
-      {newUser.is ? (
+  const renderLoginButton = () => {
+    return (
+      <button className="loginButton" onClick={requestAuth}>
+        Login
+      </button>
+    );
+  };
+
+  const renderContents = () => {
+    if (!user) {
+      return renderLoginButton();
+    }
+
+    if (user.isNew) {
+      return (
         <button
           key={"NEWUSER"}
           className={"utility-btn new-user-btn"}
-          onClick={getSendEmail(addNewMessage, newUser.info)}
+          onClick={getSendEmail(addNewMessage, user.info)}
         >
           Request Access
         </button>
-      ) : code === 1 ? (
-        buttonIds.map((buttonId) => {
-          const { text, classNames = "", name } = buttonProperties[buttonId];
-          return (
-            <button
-              key={buttonId}
-              className={["utility-btn", ...classNames].join(" ")}
-              onClick={getButtonOnClick(
-                buttonId,
-                access_token,
-                addNewMessage,
-                name
-              )}
-            >
-              {text}
-            </button>
-          );
-        })
-      ) : (
-        <button className="loginButton" onClick={requestAuth}>
-          Login
-        </button>
-      )}
+      );
+    }
+
+    if (code === 1) {
+      return getButtonIdsForUser(user.info.email).map((buttonId) => {
+        const { text, classNames } = buttonProperties[buttonId];
+        return (
+          <button
+            key={buttonId}
+            className={["utility-btn", ...classNames].join(" ")}
+            onClick={getButtonOnClick(
+              buttonId,
+              access_token,
+              addNewMessage,
+              user.info.email
+            )}
+          >
+            {text}
+          </button>
+        );
+      });
+    }
+  };
+
+  return (
+    <div>
+      {renderMessageList()}
+      {renderContents()}
     </div>
   );
 }
