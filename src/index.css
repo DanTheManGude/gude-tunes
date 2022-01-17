@@ -1,7 +1,8 @@
 html {
-  height: 100%;
+  height: max-content;
+  min-height: 100vh;
   background: linear-gradient(180deg, #222326 0%, #1a1b1e 70%, #121316 100%);
-  background-color: rgba(51, 51, 51, 1);
+  background-color: #222326;
 }
 
 body {
