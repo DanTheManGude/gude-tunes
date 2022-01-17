@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/gude-tunes/static/css/main.5ef10c8c.chunk.css",
-    "main.js": "/gude-tunes/static/js/main.453fe53d.chunk.js",
-    "main.js.map": "/gude-tunes/static/js/main.453fe53d.chunk.js.map",
+    "main.js": "/gude-tunes/static/js/main.490ded5d.chunk.js",
+    "main.js.map": "/gude-tunes/static/js/main.490ded5d.chunk.js.map",
     "runtime-main.js": "/gude-tunes/static/js/runtime-main.d0a9bc2a.js",
     "runtime-main.js.map": "/gude-tunes/static/js/runtime-main.d0a9bc2a.js.map",
     "static/js/2.cd09e326.chunk.js": "/gude-tunes/static/js/2.cd09e326.chunk.js",
@@ -15,6 +15,6 @@
     "static/js/runtime-main.d0a9bc2a.js",
     "static/js/2.cd09e326.chunk.js",
     "static/css/main.5ef10c8c.chunk.css",
-    "static/js/main.453fe53d.chunk.js"
+    "static/js/main.490ded5d.chunk.js"
   ]
 }
