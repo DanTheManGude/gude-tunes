@@ -5,6 +5,7 @@ import {
   candlesFunction,
   bostonFunction,
   syncPlaylistsFunction,
+  wbabFunction,
 } from "./ButtonFunctions";
 
 export const existingUsersMap = {
@@ -43,6 +44,7 @@ const createProperty = (text, name, func, classNames = []) => {
 export const BUTTON_IDS = {
   SHUFFLE: "SHUFFLE",
   SATURDAY: "SATURDAY",
+  WBAB: "WBAB",
   MYSTERY_DUCK: "MYSTERY_DUCK",
   CANDLES: "CANDLES",
   BOSTON: "BOSTON",
@@ -81,6 +83,7 @@ export const buttonProperties = {
     syncPlaylistsFunction,
     ["sync-playlist-btn"]
   ),
+  [BUTTON_IDS.WBAB]: createProperty("Play from WBAB", "WBAB", wbabFunction),
 };
 
 export const candlesTime = { start: 13930, end: 21200 };

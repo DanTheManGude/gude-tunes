@@ -242,3 +242,41 @@ export const syncPlaylistsFunction =
       })
       .catch(getAddErrorMessage(addNewMessage, name));
   };
+
+export const wbabFunction = (name) => (access_token, addNewMessage, userId) => {
+  const playlistId = "6E1FWxZoNQelXt3EAQ4Xe6";
+
+  makeRequest(`playlists/${playlistId}`, "GET", access_token)
+    .then((r) => r.json())
+    .then((response) => {
+      const { tracks } = response;
+      const { total, items } = tracks;
+
+      const trackIndex = Date.now() % total;
+      const trackLength = items[trackIndex].track.duration_ms;
+      const songPosition = Date.now() % trackLength;
+
+      makeRequest("me/player/play", "PUT", access_token, {
+        body: JSON.stringify({
+          context_uri: `spotify:playlist:${playlistId}`,
+          offset: {
+            position: trackIndex,
+          },
+          position_ms: songPosition,
+        }),
+      })
+        .then((resp) => {
+          const { status } = resp;
+          if (status !== 204) {
+            throw resp;
+          }
+          addNewMessage({
+            type: messageTypes.SUCCESS,
+            source: name,
+            text: "You are listeing to WBAB 102.3 Long Island's only classic rock",
+          });
+        })
+        .catch(getAddErrorMessage(addNewMessage, name));
+    })
+    .catch(getAddErrorMessage(addNewMessage, name));
+};
