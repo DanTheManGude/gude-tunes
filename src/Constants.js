@@ -28,6 +28,8 @@ export const scopesList = [
   "user-read-email",
   "user-modify-playback-state",
   "playlist-modify-public",
+  "playlist-modify-private",
+  "playlist-read-private",
 ];
 
 export const messageTypes = {
