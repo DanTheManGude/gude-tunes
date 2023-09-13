@@ -61,6 +61,7 @@ export const getButtonIdsForUser = (userEmail) => {
             BUTTON_IDS.SYNC_PLAYLISTS,
             BUTTON_IDS.MYSTERY_DUCK,
             BUTTON_IDS.CANDLES,
+            BUTTON_IDS.WBAB,
           ].includes(id)
       );
   }
