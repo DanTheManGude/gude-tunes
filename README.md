@@ -2,6 +2,5 @@
 
 Web App for utilities that enhance your Spotify experience
 
-## Current Utilities
-
-- Shuffle: activates shuffle for current playback
+## Deploy
+Publish to `dangude.com` using GH Pages with `npm run deploy`
