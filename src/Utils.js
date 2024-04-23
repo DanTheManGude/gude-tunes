@@ -2,7 +2,7 @@ import emailjs from "emailjs-com";
 import {
   scopesList,
   messageTypes,
-  BUTTON_IDS,
+  activeButtonIds,
   existingUsersMap,
   emailConfig,
   buttonProperties,
@@ -48,14 +48,13 @@ export const requestAuth = () => {
 };
 
 export const getButtonIdsForUser = (userEmail) => {
-  const allButtonIds = Object.keys(BUTTON_IDS);
   switch (existingUsersMap[userEmail]) {
     case 1:
-      return allButtonIds;
+      return activeButtonIds;
     case 7:
-      return allButtonIds;
+      return activeButtonIds;
     default:
-      return allButtonIds.filter(
+      return activeButtonIds.filter(
         (id) =>
           ![
             BUTTON_IDS.SYNC_PLAYLISTS,

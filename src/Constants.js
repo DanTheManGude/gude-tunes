@@ -53,6 +53,13 @@ export const BUTTON_IDS = {
   SYNC_PLAYLISTS: "SYNC_PLAYLISTS",
 };
 
+export const activeButtonIds = [
+  BUTTON_IDS.SHUFFLE,
+  BUTTON_IDS.SATURDAY,
+  BUTTON_IDS.WBAB,
+  BUTTON_IDS.BOSTON,
+];
+
 export const buttonProperties = {
   [BUTTON_IDS.SHUFFLE]: createProperty(
     "Activate Shuffle",
