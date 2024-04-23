@@ -100,9 +100,3 @@ export const buttonProperties = {
 };
 
 export const candlesTime = { start: 13930, end: 21200 };
-
-export const emailConfig = {
-  serviceId: "service_sbv0ia4",
-  templateId: "template_fe1e5ws",
-  userId: "user_2K4sBJkaEW2m7T8CPrYhp",
-};
