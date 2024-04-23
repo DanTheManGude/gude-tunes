@@ -6,6 +6,7 @@ import {
   bostonFunction,
   syncPlaylistsFunction,
   wbabFunction,
+  runFunction,
 } from "./ButtonFunctions";
 
 export const existingUsersMap = {
@@ -51,6 +52,7 @@ export const BUTTON_IDS = {
   CANDLES: "CANDLES",
   BOSTON: "BOSTON",
   SYNC_PLAYLISTS: "SYNC_PLAYLISTS",
+  RUN: "RUN",
 };
 
 export const activeButtonIds = [
@@ -58,6 +60,7 @@ export const activeButtonIds = [
   BUTTON_IDS.SATURDAY,
   BUTTON_IDS.WBAB,
   BUTTON_IDS.BOSTON,
+  BUTTON_IDS.RUN,
 ];
 
 export const buttonProperties = {
@@ -93,6 +96,7 @@ export const buttonProperties = {
     ["sync-playlist-btn"]
   ),
   [BUTTON_IDS.WBAB]: createProperty("Play from WBAB", "WBAB", wbabFunction),
+  [BUTTON_IDS.RUN]: createProperty("Go for a run", "Run", runFunction),
 };
 
 export const candlesTime = { start: 13930, end: 21200 };

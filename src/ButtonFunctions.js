@@ -295,3 +295,12 @@ export const wbabFunction = (name) => async (access_token, addNewMessage) => {
     text: "You are listeing to WBAB 102.3 Long Island's only classic rock",
   });
 };
+
+export const runFunction = (name) => async (access_token, addNewMessage) => {
+  console.log(access_token);
+  addNewMessage({
+    type: messageTypes.SUCCESS,
+    source: name,
+    text: "Enjoy you run 🏃‍♂️",
+  });
+};
