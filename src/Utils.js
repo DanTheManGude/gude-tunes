@@ -3,7 +3,7 @@ import {
   messageTypes,
   activeButtonIds,
   existingUsersMap,
-  emailConfig,
+  BUTTON_IDS,
   buttonProperties,
 } from "./Constants";
 
@@ -104,7 +104,7 @@ const getEmailLink = ({ displayName, email }) =>
 export const getSendEmail = (addNewMessage, userInfo) => () => {
   addNewMessage({
     type: messageTypes.WARNING,
-    source: messageSource,
+    source: "Request Access",
     text: (
       <span>
         Reach out to&nbsp;
