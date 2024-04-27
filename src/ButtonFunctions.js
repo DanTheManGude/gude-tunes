@@ -301,6 +301,6 @@ export const runFunction = (name) => async (access_token, addNewMessage) => {
   addNewMessage({
     type: messageTypes.SUCCESS,
     source: name,
-    text: "Enjoy you run 🏃‍♂️",
+    text: "Enjoy your run 🏃‍♂️",
   });
 };
