@@ -1,20 +1,13 @@
 {
   "files": {
-    "main.css": "/gude-tunes/static/css/main.99f4c75a.chunk.css",
-    "main.js": "/gude-tunes/static/js/main.50fa8807.chunk.js",
-    "main.js.map": "/gude-tunes/static/js/main.50fa8807.chunk.js.map",
-    "runtime-main.js": "/gude-tunes/static/js/runtime-main.d0a9bc2a.js",
-    "runtime-main.js.map": "/gude-tunes/static/js/runtime-main.d0a9bc2a.js.map",
-    "static/js/2.29745411.chunk.js": "/gude-tunes/static/js/2.29745411.chunk.js",
-    "static/js/2.29745411.chunk.js.map": "/gude-tunes/static/js/2.29745411.chunk.js.map",
+    "main.css": "/gude-tunes/static/css/main.69e4d509.css",
+    "main.js": "/gude-tunes/static/js/main.42f2b6e8.js",
     "index.html": "/gude-tunes/index.html",
-    "static/css/main.99f4c75a.chunk.css.map": "/gude-tunes/static/css/main.99f4c75a.chunk.css.map",
-    "static/js/2.29745411.chunk.js.LICENSE.txt": "/gude-tunes/static/js/2.29745411.chunk.js.LICENSE.txt"
+    "main.69e4d509.css.map": "/gude-tunes/static/css/main.69e4d509.css.map",
+    "main.42f2b6e8.js.map": "/gude-tunes/static/js/main.42f2b6e8.js.map"
   },
   "entrypoints": [
-    "static/js/runtime-main.d0a9bc2a.js",
-    "static/js/2.29745411.chunk.js",
-    "static/css/main.99f4c75a.chunk.css",
-    "static/js/main.50fa8807.chunk.js"
+    "static/css/main.69e4d509.css",
+    "static/js/main.42f2b6e8.js"
   ]
 }
