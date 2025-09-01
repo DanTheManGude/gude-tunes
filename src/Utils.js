@@ -60,6 +60,7 @@ export const getButtonIdsForUser = (userEmail) => {
             BUTTON_IDS.MYSTERY_DUCK,
             BUTTON_IDS.CANDLES,
             BUTTON_IDS.WBAB,
+            BUTTON_IDS.SHARK,
           ].includes(id)
       );
   }

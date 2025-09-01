@@ -6,6 +6,7 @@ import {
   bostonFunction,
   syncPlaylistsFunction,
   wbabFunction,
+  sharkFunction,
   runFunction,
 } from "./ButtonFunctions";
 
@@ -48,6 +49,7 @@ export const BUTTON_IDS = {
   SHUFFLE: "SHUFFLE",
   SATURDAY: "SATURDAY",
   WBAB: "WBAB",
+  SHARK: "SHARK",
   MYSTERY_DUCK: "MYSTERY_DUCK",
   CANDLES: "CANDLES",
   BOSTON: "BOSTON",
@@ -59,6 +61,7 @@ export const activeButtonIds = [
   BUTTON_IDS.SHUFFLE,
   BUTTON_IDS.SATURDAY,
   BUTTON_IDS.WBAB,
+  BUTTON_IDS.SHARK,
   BUTTON_IDS.BOSTON,
   BUTTON_IDS.RUN,
 ];
@@ -96,6 +99,11 @@ export const buttonProperties = {
     ["sync-playlist-btn"]
   ),
   [BUTTON_IDS.WBAB]: createProperty("Play from WBAB", "WBAB", wbabFunction),
+  [BUTTON_IDS.SHARK]: createProperty(
+    "Play 94.3 The Shark",
+    "94.3 - The Shark",
+    sharkFunction
+  ),
   [BUTTON_IDS.RUN]: createProperty("Go for a run", "Run", runFunction),
 };
 

@@ -296,6 +296,57 @@ export const wbabFunction = (name) => async (access_token, addNewMessage) => {
   });
 };
 
+export const sharkFunction = (name) => async (access_token, addNewMessage) => {
+  const playlistId = "1XGmNHXWBu8huXfIAvDrt5";
+
+  try {
+  } catch (error) {
+    getAddErrorMessage(addNewMessage, name)(error);
+  }
+  const playlist = await makeRequest(
+    `playlists/${playlistId}?fields=tracks.total`,
+    "GET",
+    access_token
+  ).then(convertToJson);
+
+  const trackIndex = Date.now() % playlist.tracks.total;
+
+  const onlyTrack = await makeRequest(
+    `playlists/${playlistId}/tracks?fields=items(track(duration_ms))&offset=${trackIndex}&limit=1`,
+    "GET",
+    access_token
+  ).then(convertToJson);
+
+  const trackLength = onlyTrack.items[0].track.duration_ms;
+  const songPosition = Date.now() % trackLength;
+
+  const playResponse = await makeRequest(
+    "me/player/play",
+    "PUT",
+    access_token,
+    {
+      body: JSON.stringify({
+        context_uri: `spotify:playlist:${playlistId}`,
+        offset: {
+          position: trackIndex,
+        },
+        position_ms: songPosition,
+      }),
+    }
+  );
+
+  const { status } = playResponse;
+  if (status !== 204) {
+    throw playResponse;
+  }
+
+  addNewMessage({
+    type: messageTypes.SUCCESS,
+    source: name,
+    text: "94.3 The Shark - Everything that rocks",
+  });
+};
+
 export const runFunction = (name) => async (access_token, addNewMessage) => {
   console.log(access_token);
   addNewMessage({
