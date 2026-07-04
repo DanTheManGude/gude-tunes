@@ -10,11 +10,12 @@ import {
 import { messageTypes, buttonProperties, existingUsersMap } from "./Constants";
 
 function App() {
-  const {
-    code,
-    message,
-    hashItems: { access_token },
-  } = calculateAuthentication();
+  const [authState, setAuthState] = useState({
+    code: 0,
+    message: "",
+    accessToken: null,
+  });
+  const { code, message, accessToken } = authState;
 
   const [messageList, setMessageList] = useState([]);
   const [user, setUser] = useState();
@@ -27,6 +28,23 @@ function App() {
   };
 
   useEffect(() => {
+    let isMounted = true;
+
+    const initializeAuth = async () => {
+      const authentication = await calculateAuthentication();
+      if (isMounted) {
+        setAuthState(authentication);
+      }
+    };
+
+    initializeAuth();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
     const startingMessage =
       code === -1
         ? {
@@ -34,24 +52,23 @@ function App() {
             text: message,
           }
         : code === 1
-        ? {
-            type: messageTypes.SUCCESS,
-            text: "Login succesfull!",
-          }
-        : {
-            type: messageTypes.INFO,
-            source: "Welcome",
-            text: "Please login below to use the app.",
-          };
+          ? {
+              type: messageTypes.SUCCESS,
+              text: "Login succesfull!",
+            }
+          : {
+              type: messageTypes.INFO,
+              source: "Welcome",
+              text: "Please login below to use the app.",
+            };
 
     addNewMessage(startingMessage);
   }, [code, message]);
 
   useEffect(() => {
-    if (!access_token) return;
+    if (!accessToken) return;
 
-    console.log(access_token);
-    makeRequest("me", "GET", access_token)
+    makeRequest("me", "GET", accessToken)
       .then((r) => {
         if (r.status === 401) {
           window.location.href = `${window.location.origin}${window.location.pathname}`;
@@ -68,7 +85,7 @@ function App() {
               source: "Application",
               text: `Sorry ${displayName}, Only designated Spotify accounts can use the application. Click below to request access.`,
             },
-            12000
+            12000,
           );
         }
         setUser({ isNew, info: { email, displayName } });
@@ -81,7 +98,7 @@ function App() {
         });
         console.error(error);
       });
-  }, [access_token]);
+  }, [accessToken]);
 
   const renderMessageList = () => {
     return (
@@ -133,9 +150,9 @@ function App() {
             className={["utility-btn", ...classNames].join(" ")}
             onClick={getButtonOnClick(
               buttonId,
-              access_token,
+              accessToken,
               addNewMessage,
-              existingUsersMap[user.info.email]
+              existingUsersMap[user.info.email],
             )}
           >
             {text}
